@@ -26,8 +26,8 @@ class Multiplayer {
 
   userID;
 
-  #defaultConnectionEvent() {
-    // console.log(`User:${this.userID || ''} is connected...`);
+  #defaultConnectionEvent({ clientId }) {
+    console.log(`User:${clientId} is connected...`);
   }
 
   #defaultErrorEvent(error) {
@@ -62,26 +62,20 @@ class Multiplayer {
     return Object.keys(this.#events);
   }
 
+  get members() {
+    return this.#room.members;
+  }
+
   connect() {
     this.#channel = this.#ably.channels.get(`${this.#room.name}:${this.#room.password}`);
-    this.#channel.presence.subscribe('enter', function(member) {
-      // alert('Member ' + member.clientId + ' entered');
-    });
     this.#channel.presence.enter();
-    this.attach(this.#events.connection);
 
     Object.keys(this.#events).forEach(eventName => {
       this.#subscribeEvent(eventName, this.#events[eventName]);
     });
-  }
 
-  attach(callback) {
-    this.#channel.attach(err => {
-      if (err) {
-        throw new Error("Error attaching to the channel");
-      }
-      callback();
-    });
+    this.#channel.publish('connection', {});
+    this.watchPresence();
   }
 
   publish(eventName, data) {
@@ -102,24 +96,14 @@ class Multiplayer {
     });
   }
 
-  getMembers(callback) {
-    this.#channel.presence.get((err, members) => {
-      if (err) {
-        throw new Error("Cannot find members!");
-      }
-
-      try {
-        callback(members);
-      } catch (err) {
-        console.error(err);
-      }
-    });
-  }
-
-  ss() {
-    this.#channel.presence.get(function(err, members) {
-      console.log('There are ' + members.length + ' members on this channel');
-      console.log('The first member has client ID: ' + members[0].clientId);
+  watchPresence() {
+    this.#channel.presence.subscribe(presenceMsg => {
+      this.#channel.presence.get((err, members) => {
+        if (err) {
+          throw new Error("Cannot find members!");
+        }
+        this.#room.members = members;
+      });
     });
   }
 }
@@ -138,11 +122,10 @@ multiplayer.subscribe('message', data => {
   console.dir(data);
 });
 
-// multiplayer.getMembers(members => {
-//   console.log('members', members);
-// });
 
-multiplayer.ss();
+setInterval(() => {
+  console.log(multiplayer.members.length);
+}, 1000);
 
 document.addEventListener('DOMContentLoaded', () => {
   const formElement = document.querySelector('form');
