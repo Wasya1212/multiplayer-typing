@@ -7,16 +7,8 @@ const settingsBtn = document.getElementById('settings-btn');
 const settings = document.getElementById('settings');
 const settingsForm = document.getElementById('settings-form');
 const difficultySelect = document.getElementById('difficulty');
-
-// const ABLY_TOKEN = "Bxk-Gg.Gf2v1g:x9_6JwTiQBorqaHw";
-
-// const getRoomName = () => prompt("Choose room:");
-// const getRoomPassword = () => prompt("Enter password:");
-// const getUsername = () => prompt("Your nickname:");
-
-// const room = new Room(getUsername(), getRoomName(), getRoomPassword());
-
-// const multiplayer = new Multiplayer(ABLY_TOKEN, room);
+const joinRoomCheckbox = document.getElementById('join');
+const membersInput = document.getElementById('members');
 
 // List of words for game
 const words = [
@@ -109,6 +101,11 @@ function gameOver() {
   endgameEl.style.display = 'flex';
 }
 
+function serializeForm(form) {
+  const formEntries = new FormData(form).entries();
+  return Object.assign(...Array.from(formEntries, ([x,y]) => ({[x]:y})));
+}
+
 addWordToDOM();
 
 // Event listeners
@@ -139,8 +136,19 @@ text.addEventListener('input', e => {
 // Settings btn click
 settingsBtn.addEventListener('click', () => settings.classList.toggle('hide'));
 
+joinRoomCheckbox.addEventListener('change', e => {
+  const toggleOperation = e.currentTarget.checked ? 'add' : 'remove';
+
+  membersInput.parentElement.classList[toggleOperation]('hidden');
+  difficultySelect.parentElement.classList[toggleOperation]('hidden')
+});
+
 // Settings select
-settingsForm.addEventListener('change', e => {
+settingsForm.addEventListener('submit', e => {
+  e.preventDefault();
+
+  console.dir(serializeForm(settingsForm));
+
   difficulty = e.target.value;
   localStorage.setItem('difficulty', difficulty);
 });

@@ -17,34 +17,37 @@
     </button>
 
     <div id="settings" class="settings">
-        <form id="room-settings">
+        <form id="settings-form">
             <div>
                 <label for="username">Nickname</label>
-                <input id="username" type="text" name="username">
+                <input id="username" type="text" name="username" required>
             </div>
             <div>
                 <label for="roomId">Room ID</label>
-                <input id="roomId" type="text" name="roomId">
+                <input id="roomId" type="text" name="roomId" required>
             </div>
             <div>
                 <label for="roomPassword">Room password</label>
-                <input id="roomPassword" type="text" name="roomPassword">
+                <input id="roomPassword" type="text" name="roomPassword" required>
             </div>
             <div class="join-checkbox-container">
                 <label for="join">Join to room</label>
-                <input id="join" type="checkbox" name="join" checked>
+                <input id="join" type="checkbox" name="join" checked="true">
             </div>
-            <div>
+            <div class="hidden">
                 <label for="members">Members count</label>
-                <input id="members" type="text" name="members">
+                <input id="members" type="number" name="members">
             </div>
-            <div>
+            <div class="hidden">
                 <label for="difficulty">Difficulty</label>
                 <select id="difficulty">
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </select>
+            </div>
+            <div>
+                <button class="confirm-room-settings">Confirm</button>
             </div>
         </form>
     </div>
