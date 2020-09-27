@@ -144,6 +144,7 @@ function initEvents() {
   });
 
   game.subscribe('loose', ({ username, score }) => {
+    console.log("user loose", username, score);
     const member = document.querySelector(`.members-list li[username="${username}"]`);
     member.setAttribute('loose', 'true');
     member.setAttribute('totalScore', score);
