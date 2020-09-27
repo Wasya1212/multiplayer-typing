@@ -70,6 +70,7 @@ text.focus();
 
 // Start counting down
 function startGame() {
+  document.querySelector('.loading').classList.remove('loading');
   game.publish('play', game.userID);
   timeInterval = setInterval(updateTime, 1000);
 }
