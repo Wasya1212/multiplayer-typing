@@ -50,6 +50,9 @@ let score = 0;
 // Init time
 let time = 10;
 
+// game is end
+let gameEnd = false;
+
 // Set difficulty to value in ls or medium
 let difficulty =
   localStorage.getItem('difficulty') !== null
@@ -102,6 +105,14 @@ function updateTime() {
 
 // Game over, show end screen
 function gameOver() {
+  const fails = document.querySelectorAll('.members-list li[loose="true"]');
+  if (fails + 1 >= game.members.length) {
+    const scores = fails.sort((a, b) => {
+      return a.getAttribute('score') - b.getAttribute('score');
+    });
+    game.publish('win', scores);
+  }
+
   game.publish('loose', game.userID);
   endgameEl.innerHTML = `
     <h1>Time ran out</h1>
@@ -134,12 +145,13 @@ function initEvents() {
 
   game.subscribe('loose', username => {
     const member = document.querySelector(`.members-list li[username="${username}"]`);
-    member.textContent = `${username}: loose`;
+    member.setAttribute('loose', 'true');
+    member.setAttribute('totalScore', score);
+    member.textContent = `${username}: loose - ${score}`;
   });
 
   game.subscribe('win', username => {
-    const member = document.querySelector(`.members-list li[username="${username}"]`);
-    member.textContent = `${username}: winner`;
+    alert(`${username}: winner with score ${score}`);
   });
 }
 
