@@ -1,4 +1,5 @@
 class Room {
+  isOwner;
   currentClientName;
   name;
   password;
@@ -6,11 +7,12 @@ class Room {
   maxMembersCount;
 
 
-  constructor(currentClientName, name = `room-${Date.now()}`, password = '', maxMembersCount = false) {
+  constructor(currentClientName, name = `room-${Date.now()}`, password = '', maxMembersCount = false, isOwner = true) {
     this.name = name;
     this.password = password;
     this.maxMembersCount = maxMembersCount;
     this.currentClientName = currentClientName;
+    this.isOwner = isOwner;
   }
 }
 
@@ -64,6 +66,18 @@ class Multiplayer {
 
   get members() {
     return this.#room.members;
+  }
+
+  get maxMembersCount() {
+    return this.#room.maxMembersCount;
+  }
+
+  get isOwner() {
+    return this.#room.isOwner;
+  }
+
+  set maxMembersCount(maxCount) {
+    this.#room.maxMembersCount = maxCount;
   }
 
   connect() {

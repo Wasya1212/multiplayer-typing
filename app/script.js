@@ -34,6 +34,13 @@ const words = [
   'loving'
 ];
 
+// api multiplayer
+const ABLY_TOKEN = "Bxk-Gg.Gf2v1g:x9_6JwTiQBorqaHw";
+let room, game;
+
+// timer
+let timeInterval;
+
 // Init word
 let randomWord;
 
@@ -59,7 +66,9 @@ difficultySelect.value =
 text.focus();
 
 // Start counting down
-const timeInterval = setInterval(updateTime, 1000);
+function startGame() {
+  timeInterval = setInterval(updateTime, 1000);
+}
 
 // Generate random word from array
 function getRandomWord() {
@@ -103,7 +112,40 @@ function gameOver() {
 
 function serializeForm(form) {
   const formEntries = new FormData(form).entries();
-  return Object.assign(...Array.from(formEntries, ([x,y]) => ({[x]:y})));
+  return Object.assign(...Array.from(formEntries, ([x, y]) => ({ [x]: y })));
+}
+
+function initEvents() {
+  game.subscribe('get-max-members', () => {
+    if (game.isOwner) {
+      game.publish('max-members', game.maxMembersCount);
+    }
+  });
+
+  game.subscribe('max-members', maxMembersCount => {
+    game.maxMembersCount = maxMembersCount;
+  });
+}
+
+function checkForMaxMembers() {
+  if (!game.isOwner) {
+    game.publish('get-max-members', {});
+  }
+}
+
+function waitForMembers() {
+  timeInterval = setInterval(() => {
+    if (!game.members || !game.maxMembersCount || game.members.length < game.maxMembersCount) {
+      console.log("wait for members...");
+    } else {
+      console.log("All fine! Members count is", game.members.length);
+      endWaitForMembers();
+    }
+  }, 1000);
+}
+
+function endWaitForMembers() {
+  clearInterval(timeInterval);
 }
 
 addWordToDOM();
@@ -147,8 +189,24 @@ joinRoomCheckbox.addEventListener('change', e => {
 settingsForm.addEventListener('submit', e => {
   e.preventDefault();
 
-  console.dir(serializeForm(settingsForm));
+  const roomSettings = serializeForm(settingsForm);
 
-  difficulty = e.target.value;
+  room = new Room(
+    roomSettings.username,
+    roomSettings.roomId,
+    roomSettings.roomPassword,
+    roomSettings.members === '' ? null : roomSettings.members,
+    !(roomSettings.join)
+  );
+
+  game = new Multiplayer(ABLY_TOKEN, room);
+
+  settings.classList.add('hide');
+
+  initEvents();
+  checkForMaxMembers();
+  waitForMembers();
+
+  difficulty = difficultySelect.value;
   localStorage.setItem('difficulty', difficulty);
 });
