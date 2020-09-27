@@ -161,6 +161,10 @@ function initEvents() {
   game.subscribe('win', ({username, score}) => {
     alert(`${username}: winner with score ${score}`);
   });
+
+  game.subscribe('connect', () => {
+    pushMembers();
+  });
 }
 
 function checkForMaxMembers() {
@@ -193,6 +197,10 @@ function pushMembers() {
   game.members.forEach(member => {
     membersList.innerHTML += `<li username="${member.clientId}">${member.clientId}</li>`;
   });
+}
+
+function informConnecting() {
+  game.publish('connect', game.userID);
 }
 
 addWordToDOM();
@@ -251,6 +259,7 @@ settingsForm.addEventListener('submit', e => {
   settings.classList.add('hide');
 
   initEvents();
+  informConnecting();
   checkForMaxMembers();
   waitForMembers();
 
