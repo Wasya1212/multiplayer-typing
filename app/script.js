@@ -67,6 +67,7 @@ text.focus();
 
 // Start counting down
 function startGame() {
+  game.publish('play', game.userID);
   timeInterval = setInterval(updateTime, 1000);
 }
 
@@ -125,6 +126,11 @@ function initEvents() {
   game.subscribe('max-members', maxMembersCount => {
     game.maxMembersCount = maxMembersCount;
   });
+
+  game.subscribe('play', username => {
+    const member = document.querySelector(`.members-list li[username="${username}"]`);
+    member.innerHTML += ": playing";
+  });
 }
 
 function checkForMaxMembers() {
@@ -140,12 +146,23 @@ function waitForMembers() {
     } else {
       console.log("All fine! Members count is", game.members.length);
       endWaitForMembers();
+      pushMembers();
+      startGame();
     }
   }, 1000);
 }
 
 function endWaitForMembers() {
   clearInterval(timeInterval);
+}
+
+function pushMembers() {
+  const membersList = document.querySelector('.members-list');
+  membersList.innerHTML = "";
+
+  game.members.forEach(member => {
+    membersList.innerHTML += `<li username="${member.clientId}">${member.clientId}</li>`;
+  });
 }
 
 addWordToDOM();

@@ -134,6 +134,23 @@ input {
     z-index: 1;
 }
 
+.members {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    color: white;
+}
+
+.members h2 {
+    margin-bottom: 0;
+}
+
+.members-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 1rem 0;
+}
+
 .hidden {
     display: none;
 }
