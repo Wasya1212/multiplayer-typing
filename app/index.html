@@ -17,16 +17,6 @@
     </button>
 
     <div id="settings" class="settings">
-        <form id="settings-form">
-            <div>
-                <label for="difficulty">Difficulty</label>
-                <select id="difficulty">
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
-            </div>
-        </form>
         <form id="room-settings">
             <div>
                 <label for="username">Nickname</label>
@@ -40,13 +30,21 @@
                 <label for="roomPassword">Room password</label>
                 <input id="roomPassword" type="text" name="roomPassword">
             </div>
-            <div>
-                <label for="join"></label>
+            <div class="join-checkbox-container">
+                <label for="join">Join to room</label>
                 <input id="join" type="checkbox" name="join" checked>
             </div>
             <div>
                 <label for="members">Members count</label>
                 <input id="members" type="text" name="members">
+            </div>
+            <div>
+                <label for="difficulty">Difficulty</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
             </div>
         </form>
     </div>
