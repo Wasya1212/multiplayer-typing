@@ -102,12 +102,12 @@ function updateTime() {
 
 // Game over, show end screen
 function gameOver() {
+  game.publish('loose', game.userID);
   endgameEl.innerHTML = `
     <h1>Time ran out</h1>
     <p>Your final score is ${score}</p>
     <button onclick="location.reload()">Reload</button>
   `;
-
   endgameEl.style.display = 'flex';
 }
 
@@ -129,7 +129,17 @@ function initEvents() {
 
   game.subscribe('play', username => {
     const member = document.querySelector(`.members-list li[username="${username}"]`);
-    member.innerHTML += ": playing";
+    member.textContent = `${username}: playing`;
+  });
+
+  game.subscribe('loose', username => {
+    const member = document.querySelector(`.members-list li[username="${username}"]`);
+    member.textContent = `${username}: loose`;
+  });
+
+  game.subscribe('win', username => {
+    const member = document.querySelector(`.members-list li[username="${username}"]`);
+    member.textContent = `${username}: winner`;
   });
 }
 
