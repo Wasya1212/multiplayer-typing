@@ -113,7 +113,7 @@ function gameOver() {
     game.publish('win', scores);
   }
 
-  game.publish('loose', game.userID);
+  game.publish('loose', { username: game.userID, score });
   endgameEl.innerHTML = `
     <h1>Time ran out</h1>
     <p>Your final score is ${score}</p>
@@ -143,7 +143,7 @@ function initEvents() {
     member.textContent = `${username}: playing`;
   });
 
-  game.subscribe('loose', username => {
+  game.subscribe('loose', ({ username, score }) => {
     const member = document.querySelector(`.members-list li[username="${username}"]`);
     member.setAttribute('loose', 'true');
     member.setAttribute('totalScore', score);
