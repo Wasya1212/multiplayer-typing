@@ -1,18 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+        integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Speed Typer</title>
 </head>
+
 <body>
-    <a href="app/index.html">App</a>
-    <form>
-        <input type="text" placeholder="message...">
-        <button>submit</button>
-    </form>
+    <button id="settings-btn" class="settings-btn">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <div id="settings" class="settings">
+        <form id="settings-form">
+            <div>
+                <label for="username">Nickname</label>
+                <input id="username" type="text" name="username" required>
+            </div>
+            <div>
+                <label for="roomId">Room ID</label>
+                <input id="roomId" type="text" name="roomId" required>
+            </div>
+            <div>
+                <label for="roomPassword">Room password</label>
+                <input id="roomPassword" type="text" name="roomPassword" required>
+            </div>
+            <div class="join-checkbox-container">
+                <label for="join">Join to room</label>
+                <input id="join" type="checkbox" name="join" checked="true">
+            </div>
+            <div class="hidden">
+                <label for="members">Members count</label>
+                <input id="members" type="number" name="members">
+            </div>
+            <div class="hidden">
+                <label for="difficulty">Difficulty</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div>
+                <button class="confirm-room-settings">Confirm</button>
+            </div>
+        </form>
+    </div>
+
+    <aside class="members">
+        <h2>members</h2>
+        <ul class="members-list"></ul>
+    </aside>
+
+    <div class="container loading">
+        <h2>👩‍💻 Speed Typer 👨‍💻</h2>
+        <small>Type the following:</small>
+
+        <h1 id="word"></h1>
+
+        <input type="text" id="text" autocomplete="off" placeholder="Type the word here..." autofocus />
+
+        <p class="time-container">Time left: <span id="time">10s</span></p>
+
+        <p class="score-container">Score: <span id="score">0</span></p>
+
+        <div id="end-game-container" class="end-game-container"></div>
+    </div>
+
     <script type="text/javascript" src="//cdn.ably.io/lib/ably.min-1.js"></script>
     <script src="//jsbin-files.ably.io/js/jquery-1.8.3.min.js"></script>
-    <script src="index.js"></script>
+    <script src="libs/multiplayer.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
