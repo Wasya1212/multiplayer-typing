@@ -121,3 +121,6 @@ class Multiplayer {
     });
   }
 }
+
+module.exports.Room = Room;
+module.exports.Multiplayer = Multiplayer;
