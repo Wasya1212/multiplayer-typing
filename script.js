@@ -118,6 +118,8 @@ function gameOver() {
 
 // get winner from game table
 function getWinner(fails) {
+  if (fails.length < 2) return;
+  
   // sort by scores
   const scores = Array.from(fails).sort((a, b) => {
     return a.getAttribute('score') - b.getAttribute('score');
