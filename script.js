@@ -107,20 +107,30 @@ function updateTime() {
 // Game over, show end screen
 function gameOver() {
   const fails = document.querySelectorAll('.members-list li[loose="true"]');
-  if (fails.length + 1 >= game.members.length) {
-    const scores = Array.from(fails).sort((a, b) => {
-      return a.getAttribute('score') - b.getAttribute('score');
-    });
-    const firstInListUsername = scores[0].getAttribute('username');
-    const firstinListScore = scores[0].getAttribute('score');
 
-    game.publish('win', {
-      username: score > firstinListScore ? game.userID : firstInListUsername,
-      score: score > firstinListScore ? score : firstinListScore
-    });
-  }
-
+  // check for winner if end of game
+  fails.length + 1 >= game.members.length && getWinner(fails);
+  // make loosing
   game.publish('loose', { username: game.userID, score });
+  // show game results
+  showGameOver();
+}
+
+function getWinner(fails) {
+  const scores = Array.from(fails).sort((a, b) => {
+    return a.getAttribute('score') - b.getAttribute('score');
+  });
+
+  const firstInListUsername = scores[0].getAttribute('username');
+  const firstinListScore = scores[0].getAttribute('score');
+
+  game.publish('win', {
+    username: score > firstinListScore ? game.userID : firstInListUsername,
+    score: score > firstinListScore ? score : firstinListScore
+  });
+}
+
+function showGameOver() {
   endgameEl.innerHTML = `
     <h1>Time ran out</h1>
     <p>Your final score is ${score}</p>
@@ -158,7 +168,7 @@ function initEvents() {
     member.textContent = `${username}: loose - ${score}`;
   });
 
-  game.subscribe('win', ({username, score}) => {
+  game.subscribe('win', ({ username, score }) => {
     alert(`${username}: winner with score ${score}`);
   });
 
