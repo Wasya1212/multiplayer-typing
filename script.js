@@ -116,7 +116,9 @@ function gameOver() {
   showGameOver();
 }
 
+// get winner from game table
 function getWinner(fails) {
+  // sort by scores
   const scores = Array.from(fails).sort((a, b) => {
     return a.getAttribute('score') - b.getAttribute('score');
   });
@@ -124,12 +126,14 @@ function getWinner(fails) {
   const firstInListUsername = scores[0].getAttribute('username');
   const firstinListScore = scores[0].getAttribute('score');
 
+  // report victory
   game.publish('win', {
     username: score > firstinListScore ? game.userID : firstInListUsername,
     score: score > firstinListScore ? score : firstinListScore
   });
 }
 
+// show game results
 function showGameOver() {
   endgameEl.innerHTML = `
     <h1>Time ran out</h1>
@@ -139,11 +143,13 @@ function showGameOver() {
   endgameEl.style.display = 'flex';
 }
 
+// get data from form
 function serializeForm(form) {
   const formEntries = new FormData(form).entries();
   return Object.assign(...Array.from(formEntries, ([x, y]) => ({ [x]: y })));
 }
 
+// initialize all game events
 function initEvents() {
   game.subscribe('get-max-members', () => {
     if (game.isOwner) {
@@ -177,25 +183,31 @@ function initEvents() {
   });
 }
 
+// get max room members count from room owner
 function checkForMaxMembers() {
   if (!game.isOwner) {
     game.publish('get-max-members', {});
   }
 }
 
+// wait untill all players come
 function waitForMembers() {
   timeInterval = setInterval(() => {
     if (!game.members || !game.maxMembersCount || game.members.length < game.maxMembersCount) {
       console.log("wait for members...");
     } else {
       console.log("All fine! Members count is", game.members.length);
+      // end wait
       endWaitForMembers();
+      // create players table
       pushMembers();
+      // start play
       startGame();
     }
   }, 1000);
 }
 
+// end wait for players
 function endWaitForMembers() {
   clearInterval(timeInterval);
 }
@@ -209,10 +221,12 @@ function pushMembers() {
   });
 }
 
+// notify everyone about connection
 function informConnecting() {
   game.publish('connect', game.userID);
 }
 
+// add first word
 addWordToDOM();
 
 // Event listeners
